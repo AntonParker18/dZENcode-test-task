@@ -4,10 +4,10 @@ import { getCaptcha, login } from '../../redux/auth/authAction'
 import { useNavigate } from 'react-router-dom'
 import { Button, Container, TextField, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
+import SvgComponent from '../../assets/svg/SvgComponent'
 
 const LoginForm = () => {
-  const { loading, captcha } = useSelector(state => state.auth)
-  const { userInfo } = useSelector(state => state.user)
+  const { captcha, success, token, loading } = useSelector(state => state.auth)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -19,28 +19,49 @@ const LoginForm = () => {
   } = useForm()
 
   useEffect(() => {
-    const fetchCaptcha = async () => {
-      try {
-        const captcha = dispatch(getCaptcha())
-        console.log(captcha)
-      } catch (error) {
-        console.error('Failed to load captcha:', error)
-      }
+    if (success && token) {
+      localStorage.setItem('userToken', token)
+      navigate('/comment')
     }
+  }, [navigate, token, success])
 
-    fetchCaptcha()
-  }, [dispatch])
-
-  console.log(captcha)
+  const fetchCaptcha = async () => {
+    try {
+      dispatch(getCaptcha())
+    } catch (error) {
+      console.error('Failed to load captcha:', error)
+    }
+  }
 
   const onSubmit = data => {
     dispatch(login(data))
+    console.log(data)
+  }
+
+  if (loading) {
+    return <h3>Loading...</h3>
   }
 
   return (
-    <Container>
-      <Typography variant='h5'>Login</Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Container
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+      }}
+    >
+      <Typography variant='h5' sx={{p: '10px'}}>Login</Typography>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          minWidth: '15vw',
+        }}
+      >
         <TextField
           type='email'
           {...register('email', {
@@ -64,7 +85,6 @@ const LoginForm = () => {
           autoComplete='password'
           error={!!errors.password}
         />
-        <img src={captcha} alt='Captcha' />
         <TextField
           type='text'
           {...register('captcha')}
@@ -72,9 +92,28 @@ const LoginForm = () => {
           autoComplete='captcha'
           error={!!errors.captcha}
         />
-        <Button variant='contained' color='primary' type='submit'>
-          Login
+
+        <SvgComponent svgCode={captcha} />
+
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={() => fetchCaptcha()}
+        >
+          get captcha
         </Button>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() => navigate('/registration')}
+          >
+            Go to registration
+          </Button>
+          <Button variant='contained' color='primary' type='submit'>
+            Login
+          </Button>
+        </div>
       </form>
     </Container>
   )

@@ -27,7 +27,6 @@ export class AuthController {
   @UseGuards(LocalStrategy)
   @Post('/login')
   login(@Body() userDto: CreateUserDto, @Req() req: Request) {
-    console.log(userDto, req.body)
     return this.authService.login(userDto, req.body.captcha)
   }
 

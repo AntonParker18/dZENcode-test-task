@@ -29,11 +29,12 @@ export const registration = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async ({ email, password }, { rejectWithValue, dispatch }) => {
+  async ({ email, password, captcha }, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await axios.post(`${apiUrl}/auth/login`, {
         email,
         password,
+        captcha
       })
       dispatch(setUser(data))
       return data
@@ -68,12 +69,7 @@ export const getCaptcha = createAsyncThunk(
   'auth/getCaptcha',
   async (arg, { rejectWithValue, dispatch }) => {
     try {
-      const config = {
-        headers: 'image/svg+xml; charset=utf-8'
-      }
-
-      const {data} = await axios.get(`${apiUrl}/auth/captcha`, config)
-      console.log(data)
+      const { data } = await axios.get(`${apiUrl}/auth/captcha`)
       return data
     } catch (error) {
       if (error.response?.data?.message) {

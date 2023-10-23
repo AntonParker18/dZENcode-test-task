@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import { NavLink } from 'react-router-dom'
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+import userImg from '../../assets/img/user.jpg'
 
 function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null)
@@ -47,7 +47,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='User' src='../../assets/img/user.jpg' />
+                <Avatar alt='User' src={userImg} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -66,11 +66,18 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                onClick={handleCloseUserMenu}
+                sx={{ display: 'flex', flexDirection: 'column', gap: '10px ' }}
+              >
+                <NavLink
+                  to={'/profile'}
+                  style={{ color: '#000', textDecoration: 'none' }}
+                >
+                  Profile
+                </NavLink>
+                <Typography textAlign='center'>Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

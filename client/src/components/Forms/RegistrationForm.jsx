@@ -14,7 +14,7 @@ const RegistrationForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    getValues
+    getValues,
   } = useForm()
 
   useEffect(() => {
@@ -25,14 +25,32 @@ const RegistrationForm = () => {
     dispatch(registration(data))
   }
 
-  if(loading) {
+  if (loading) {
     return <h3>Loading...</h3>
   }
 
   return (
-    <Container>
-      <Typography variant='h5'>Registration</Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Container
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+      }}
+    >
+      <Typography variant='h5' sx={{ p: '10px' }}>
+        Registration
+      </Typography>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          minWidth: '15vw',
+        }}
+      >
         <TextField
           type='text'
           {...register('userName', {
@@ -87,9 +105,24 @@ const RegistrationForm = () => {
           error={!!errors.confirmPassword}
           helperText={errors.confirmPassword?.message}
         />
-        <Button variant='contained' color='primary' type='submit'>
-          Register
-        </Button>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Button variant='contained' color='primary' type='submit'>
+            Registration
+          </Button>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() => navigate('/login')}
+          >
+            Go to login
+          </Button>
+        </div>
       </form>
     </Container>
   )

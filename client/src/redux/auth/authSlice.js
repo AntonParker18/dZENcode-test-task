@@ -8,7 +8,7 @@ const authSlice = createSlice({
     success: null,
     loading: null,
     error: null,
-    captcha: null
+    captcha: null,
   },
   reducers: {},
   extraReducers: {
@@ -59,13 +59,13 @@ const authSlice = createSlice({
     },
     //getCaptcha
     [getCaptcha.pending]: state => {
-      state.success = false
+      state.success = null
       state.loading = true
       state.error = null
+      state.captcha = null
     },
-    [getCaptcha.fulfilled]: (state, {payload}) => {
+    [getCaptcha.fulfilled]: (state, { payload }) => {
       state.captcha = payload
-      console.log(payload)
       state.loading = false
       state.success = true
     },
